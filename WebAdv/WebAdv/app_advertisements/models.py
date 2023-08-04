@@ -11,6 +11,16 @@ class Advertisement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 
+    @admin.display(description='дата обновления')
+    def update_date(self):
+        from django.utils import timezone
+        if self.update_at.date() == timezone.now().date():
+            update_time = self.update_at.time().strftime("%H:%M:%S")
+            return format_html(
+                '<span style="color: green; font-weight: bold;">Сегодня в {}</span>', update_time
+            )
+        return self.update_at.strftime("%d.%m.%Y в %H:%M:%S")
+    
     @admin.display(description='дата создания')
     def created_date(self):
         from django.utils import timezone
